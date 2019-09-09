@@ -29,6 +29,12 @@ function collect_wheels() {
   rename -v "s/torch_xla-.*\+\w{7}/torch_xla-${wheel_version}/" *.whl
   popd
   mv /tmp/staging-wheels/* .
+  pushd /tmp/staging-wheels
+  cp /pytorch/vision/dist/*.whl .
+  rename -v "s/^torchvision-.*-cp/torchvision-${wheel_version}-cp/" *.whl
+  popd
+  mv /tmp/staging-wheels/* .
+
   rm -rf /tmp/staging-wheels
 
   pushd /pytorch/dist
@@ -36,6 +42,9 @@ function collect_wheels() {
   popd
   pushd /pytorch/xla/dist
   rename -v "s/^torch_xla/torch_xla-${wheel_version}+$(date -u +%Y%m%d)/" *.whl
+  popd
+  pushd /pytorch/vision/dist
+  rename -v "s/^torchvision/torchvision-${wheel_version}+$(date -u +%Y%m%d)/" *.whl
   popd
   cp /pytorch/dist/*.whl ./ && cp /pytorch/xla/dist/*.whl ./
 }
